@@ -1,1 +1,1 @@
-enum NavbarItem { home, results, profile }
+enum NavbarItem { home, results, profile, auth, init }

@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:testing_app/profile/service/model/user_profile_dto.dart';
 
 abstract class ProfileService {
-  // Future<Either<FormatException, List<Character>?>> getCharacters(int? page);
+  Future<Either<FormatException, UserProfileDto?>> profile();
 }
