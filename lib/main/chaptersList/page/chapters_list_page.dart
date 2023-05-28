@@ -5,12 +5,14 @@ import 'package:testing_app/main/chaptersList/widgets/chapters_list_widget.dart'
 import 'package:testing_app/main/service/main_service_impl.dart';
 
 class ChaptersListPage extends StatelessWidget {
-  const ChaptersListPage({super.key});
+  final int subjectId;
+  const ChaptersListPage({super.key, required this.subjectId});
 
   @override
   Widget build(BuildContext context) {
+
     return BlocProvider(
-      create: (context) => ChaptersListBloc(MainServiceImpl()),
+      create: (context) => ChaptersListBloc(MainServiceImpl(), subjectId),
       child: const ChaptersListWidget(),
     );
   }

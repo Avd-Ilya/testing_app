@@ -29,3 +29,7 @@ class TestSelectedAnswerOption extends TestEvent {
 }
 
 class TestNextTapped extends TestEvent {}
+
+class TestSendTapped extends TestEvent {}
+
+class TestFinishAccepted extends TestEvent {}

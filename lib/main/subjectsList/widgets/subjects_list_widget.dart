@@ -1,4 +1,5 @@
 import 'package:core/alert_dialog.dart';
+import 'package:core/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testing_app/main/chaptersList/page/chapters_list_page.dart';
@@ -42,46 +43,83 @@ class _SubjectsListWidgetState extends State<SubjectsListWidget> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return const ChaptersListPage();
+                        return ChaptersListPage(
+                            subjectId: state.subject.id ?? 0);
                       },
                     ),
                   ).then((value) {
-                    context.read<SubjectsListBloc>().add(SubjectsListNeedData());
+                    context
+                        .read<SubjectsListBloc>()
+                        .add(SubjectsListNeedData());
                   });
                 });
               }
-              return ListView.separated(
-                padding: const EdgeInsets.all(10),
-                separatorBuilder: (context, index) {
-                  return const Divider(
-                    endIndent: 20,
-                    indent: 20,
-                    thickness: 1,
-                    height: 5,
-                  );
-                },
-                itemCount: subjects.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      context
-                          .read<SubjectsListBloc>()
-                          .add(SubjectsListSelected(index));
-                    },
-                    child: Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.all(20),
-                      child: Row(
-                        children: [
-                          Text(subjects[index].name ?? '',
-                              style: const TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.w500)),
-                          Expanded(child: Container()),
-                          const Icon(Icons.chevron_right)
-                        ],
-                      ),
-                    ),
-                  );
+              return Builder(
+                builder: (context) {
+                  if (subjects.isEmpty && state is SubjectsListLoaded) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Ничего не найдено',
+                          style: TextStyle(fontSize: 25),
+                        ),
+                        const SizedBox(
+                          height: 100,
+                          width: double.infinity,
+                        ),
+                        ElevatedButton(
+                            style: const ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(
+                                  ColorConstants.darkBlue),
+                            ),
+                            onPressed: () {
+                              context
+                                  .read<SubjectsListBloc>()
+                                  .add(SubjectsListNeedData());
+                            },
+                            child: const Text('Попробовать снова')),
+                      ],
+                    );
+                  } else {
+                    return ListView.separated(
+                      padding: const EdgeInsets.all(10),
+                      separatorBuilder: (context, index) {
+                        return const Divider(
+                          endIndent: 20,
+                          indent: 20,
+                          thickness: 1,
+                          height: 5,
+                        );
+                      },
+                      itemCount: subjects.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            context
+                                .read<SubjectsListBloc>()
+                                .add(SubjectsListSelected(index));
+                          },
+                          child: Container(
+                            color: Colors.white,
+                            padding: const EdgeInsets.all(20),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(subjects[index].name ?? '',
+                                      style: const TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w500)),
+                                ),
+                                const Icon(Icons.chevron_right)
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
                 },
               );
             },

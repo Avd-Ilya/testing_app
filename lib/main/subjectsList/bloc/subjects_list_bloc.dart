@@ -17,7 +17,7 @@ class SubjectsListBloc extends Bloc<SubjectsListEvent, SubjectsListState> {
     List<SubjectDto> subjects = [];
 
     on<SubjectsListNeedData>((event, emit) async {
-      final response = await mainService.getSubjects();
+      final response = await mainService.getSubjects(schoolClass.id ?? 0);
 
       response.fold(
         (exception) {

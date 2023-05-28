@@ -1,9 +1,14 @@
-import 'dart:ffi';
-
+import 'package:core/alert_dialog.dart';
+import 'package:core/color_constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testing_app/main/complitedTest/page/complited_test_page.dart';
 import 'package:testing_app/main/test/bloc/test_bloc.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:bmprogresshud/bmprogresshud.dart';
+import 'package:testing_app/main/test/widgets/comparsion_element_widget.dart';
+import 'package:testing_app/main/test/widgets/selection_row_widget.dart';
 
 class TestWidget extends StatefulWidget {
   const TestWidget({super.key});
@@ -15,14 +20,11 @@ class TestWidget extends StatefulWidget {
 class _TestWidgetState extends State<TestWidget> {
   var selectedQuestion = 0;
 
-  Widget _buildSelectionList(BuildContext context, TestState state) {
+  Widget _buildSingleSelectionList(BuildContext context, TestState state) {
     return Container(
-      // height: 400,
-      // color: Colors.grey,
       margin: const EdgeInsets.all(10),
       child: ListView.separated(
         shrinkWrap: true,
-        // primary: false,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: state.test.questions[state.selectedQuestion]?.answerOptions
                 ?.length ??
@@ -45,6 +47,42 @@ class _TestWidgetState extends State<TestWidget> {
                   ? false
                   : state.selectedAnswerOptions[state.selectedQuestion]
                       .contains(index),
+              isSingleSelection: true,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSelectionList(BuildContext context, TestState state) {
+    return Container(
+      margin: const EdgeInsets.all(10),
+      child: ListView.separated(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: state.test.questions[state.selectedQuestion]?.answerOptions
+                ?.length ??
+            0,
+        separatorBuilder: (context, index) {
+          return const SizedBox(
+            height: 10,
+          );
+        },
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              context.read<TestBloc>().add(TestSelectedAnswerOption(index));
+            },
+            child: SelectionRow(
+              text: state.test.questions[state.selectedQuestion]
+                      ?.answerOptions?[index].text ??
+                  '',
+              isSelected: state is TestInitial
+                  ? false
+                  : state.selectedAnswerOptions[state.selectedQuestion]
+                      .contains(index),
+              isSingleSelection: false,
             ),
           );
         },
@@ -54,8 +92,6 @@ class _TestWidgetState extends State<TestWidget> {
 
   Widget _buildComparsionView(BuildContext context, TestState state) {
     return Container(
-      // height: 400,
-      // color: Colors.grey,
       margin: const EdgeInsets.all(10),
       child: Column(
         children: [
@@ -160,11 +196,11 @@ class _TestWidgetState extends State<TestWidget> {
                 return Column(
                   children: [
                     const SizedBox(
-                      height: 50,
+                      height: 30,
                     ),
                     Container(
                       height: 70,
-                      color: Colors.grey,
+                      // color: Colors.white,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: state
@@ -200,8 +236,6 @@ class _TestWidgetState extends State<TestWidget> {
 
   Widget _buildSequenceView(BuildContext context, TestState state) {
     return Container(
-      // height: 400,
-      // color: Colors.grey,
       margin: const EdgeInsets.all(10),
       child: Column(
         children: [
@@ -264,11 +298,11 @@ class _TestWidgetState extends State<TestWidget> {
                 return Column(
                   children: [
                     const SizedBox(
-                      height: 50,
+                      height: 30,
                     ),
                     Container(
                       height: 70,
-                      color: Colors.grey,
+                      // color: Colors.w,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: state
@@ -302,11 +336,59 @@ class _TestWidgetState extends State<TestWidget> {
     );
   }
 
+  void showFinishAlert(BuildContext context) {
+    CupertinoAlertDialog cupertinoAlert = CupertinoAlertDialog(
+      title: const Text("Завершить тестирование?"),
+      content: const Text(
+          'Тестирование будет завершено. Результаты будут отправлены.'),
+      actions: [
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          child: const Text(
+            'Нет',
+            style: TextStyle(color: Colors.green),
+          ),
+        ),
+        CupertinoDialogAction(
+          isDestructiveAction: true,
+          onPressed: () {
+            context.read<TestBloc>().add(TestFinishAccepted());
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          child: const Text('Да'),
+        ),
+      ],
+    );
+
+    Future.delayed(
+      Duration.zero,
+      () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return cupertinoAlert;
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Тестирование'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.read<TestBloc>().add(TestSendTapped());
+            },
+            icon: const Icon(Icons.send),
+          )
+        ],
       ),
       body: SafeArea(
         // color: Colors.white,
@@ -318,7 +400,40 @@ class _TestWidgetState extends State<TestWidget> {
             if (state is TestUpdated) {
               selectedQuestion = state.selectedQuestion;
               debugPrint('${state.selectedAnswerOptions}');
-              debugPrint('${state.coparsionAnswerOptions}');
+              // debugPrint('${state.coparsionAnswerOptions}');
+            }
+            if (state is TestShouldFinish) {
+              showFinishAlert(context);
+            }
+            if (state is TestLoading) {
+              // return const CircularProgressIndicator();
+              ProgressHud.showLoading();
+            } else {
+              ProgressHud.dismiss();
+            }
+            if (state is TestError) {
+              showAlertDialog(context, state.message);
+            }
+            if (state is TestCompleted) {
+              Future.delayed(
+                Duration.zero,
+                () {
+                  ProgressHud.of(context)
+                      ?.showSuccessAndDismiss(text: 'Тест отправлен!')
+                      .then((value) {
+                    Future.delayed(Duration.zero, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ComplitedTestPage(result: state.result);
+                          },
+                        ),
+                      );
+                    });
+                  });
+                },
+              );
             }
             return SingleChildScrollView(
               child: Column(
@@ -339,16 +454,79 @@ class _TestWidgetState extends State<TestWidget> {
                           child: Container(
                             width: 70,
                             margin: const EdgeInsets.all(5),
-                            color: index == selectedQuestion
-                                ? Colors.lightBlue
-                                : Colors.blueGrey,
-                            child: Column(
-                              children: [
-                                const Expanded(
-                                  child: Icon(Icons.done),
-                                ),
-                                Text('${index + 1}')
-                              ],
+                            // color: index == selectedQuestion
+                            //     ? ColorConstants.blue
+                            //     : ColorConstants.lightGray,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 2,
+                                    color: index == selectedQuestion
+                                        ? ColorConstants.blue
+                                        : ColorConstants.lightGray,
+                                  ),
+                                  borderRadius: BorderRadius.circular(3)),
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: Builder(
+                                      builder: (context) {
+                                        Widget child =
+                                            const Icon(Icons.minimize);
+                                        if (state is! TestInitial) {
+                                          switch (state.test.questions[index]
+                                              ?.questionTypeId) {
+                                            case 1:
+                                              if (state
+                                                  .selectedAnswerOptions[index]
+                                                  .isNotEmpty) {
+                                                child = const Icon(Icons.done);
+                                              } else {
+                                                child =
+                                                    const Icon(Icons.minimize);
+                                              }
+                                              break;
+                                            case 2:
+                                              if (state
+                                                  .selectedAnswerOptions[index]
+                                                  .isNotEmpty) {
+                                                child = const Icon(Icons.done);
+                                              } else {
+                                                child =
+                                                    const Icon(Icons.minimize);
+                                              }
+                                              break;
+                                            case 3:
+                                              if (state
+                                                  .coparsionAnswerOptions[index]
+                                                  .isEmpty) {
+                                                child = const Icon(Icons.done);
+                                              } else {
+                                                child =
+                                                    const Icon(Icons.minimize);
+                                              }
+                                              break;
+                                            case 4:
+                                              if (state
+                                                  .coparsionAnswerOptions[index]
+                                                  .isEmpty) {
+                                                child = const Icon(Icons.done);
+                                              } else {
+                                                child =
+                                                    const Icon(Icons.minimize);
+                                              }
+                                              break;
+                                            default:
+                                              break;
+                                          }
+                                        }
+                                        return child;
+                                      },
+                                    ),
+                                  ),
+                                  Text('${index + 1}')
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -374,7 +552,7 @@ class _TestWidgetState extends State<TestWidget> {
                       switch (state.test.questions[state.selectedQuestion]
                           ?.questionTypeId) {
                         case 1:
-                          return _buildSelectionList(context, state);
+                          return _buildSingleSelectionList(context, state);
                         case 2:
                           return _buildSelectionList(context, state);
                         case 3:
@@ -391,6 +569,10 @@ class _TestWidgetState extends State<TestWidget> {
                     height: 40,
                     width: 150,
                     child: ElevatedButton(
+                      style: const ButtonStyle(
+                        backgroundColor:
+                            MaterialStatePropertyAll(ColorConstants.darkBlue),
+                      ),
                       onPressed: () {
                         context.read<TestBloc>().add(TestNextTapped());
                       },
@@ -410,134 +592,6 @@ class _TestWidgetState extends State<TestWidget> {
               ),
             );
           },
-        ),
-      ),
-    );
-  }
-}
-
-class SelectionRow extends StatelessWidget {
-  String text;
-  bool isSelected;
-  SelectionRow({super.key, required this.text, required this.isSelected});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 70,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          border: Border.all(),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                  isSelected ? Icons.check_box : Icons.check_box_outline_blank),
-            ),
-            Text(
-              text,
-              style: const TextStyle(fontSize: 25),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ComparsionRow extends StatelessWidget {
-  final String text;
-  const ComparsionRow({super.key, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 70,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 5,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Text(
-                      text,
-                      style: const TextStyle(fontSize: 25),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            flex: 5,
-            child: DragTarget(
-              builder: (context, candidateData, rejectedData) {
-                return DottedBorder(
-                  radius: const Radius.circular(10),
-                  padding: const EdgeInsets.all(5),
-                  child: const Center(child: Icon(Icons.add)),
-                );
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class ComparsionElement extends StatelessWidget {
-  final int id;
-  final String text;
-  const ComparsionElement({super.key, required this.id, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Draggable(
-      data: id,
-      childWhenDragging: Container(),
-      feedback: ComparsionTextView(text: text),
-      child: ComparsionTextView(text: text),
-    );
-  }
-}
-
-class ComparsionTextView extends StatelessWidget {
-  final String text;
-  const ComparsionTextView({super.key, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.4,
-      margin: const EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(5),
-              child: Text(
-                text,
-                style: const TextStyle(fontSize: 25),
-              ),
-            ),
-          ),
         ),
       ),
     );

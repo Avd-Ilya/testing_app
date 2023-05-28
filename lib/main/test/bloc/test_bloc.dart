@@ -17,9 +17,10 @@ class TestBloc extends Bloc<TestEvent, TestState> {
   var selectedQuestion = 0;
   List<List<int?>> selectedAnswerOptions = [];
   List<List<int?>> coparsionAnswerOptions = [];
-  var passedTest = PassedTestRequestDto();
+  var passedTestRequest= PassedTestRequestDto();
+  int? trackedTestId;
 
-  TestBloc(this.mainService, this.test)
+  TestBloc(this.mainService, this.test, this.trackedTestId)
       : super(TestInitial(test, 0, const [], const [])) {
     on<TestOnAppear>((event, emit) {
       selectedAnswerOptions =
@@ -144,12 +145,63 @@ class TestBloc extends Bloc<TestEvent, TestState> {
     });
     on<TestNextTapped>((event, emit) {
       if (test.questions.length == selectedQuestion + 1) {
-        debugPrint('Last question');
+        emit(TestShouldFinish(test, selectedQuestion, selectedAnswerOptions,
+            coparsionAnswerOptions));
       } else {
         selectedQuestion = selectedQuestion + 1;
         emit(TestUpdated(test, selectedQuestion, selectedAnswerOptions,
             coparsionAnswerOptions));
       }
+    });
+    on<TestSendTapped>((event, emit) {
+      emit(TestShouldFinish(test, selectedQuestion, selectedAnswerOptions,
+          coparsionAnswerOptions));
+    });
+    on<TestFinishAccepted>((event, emit) async {
+      passedTestRequest.date = DateTime.now();
+      passedTestRequest.result = null;
+      passedTestRequest.testId = test.id;
+      passedTestRequest.userAnswerRequests = [];
+      passedTestRequest.trackedTestId = trackedTestId;
+      for (var i = 0; i < test.questions.length; i++) {
+        var question = test.questions[i];
+        var userAnswerRequest = UserAnswerRequest(
+            questionId: question?.id, selectedOptionRequests: []);
+        if (question?.questionTypeId == 1 || question?.questionTypeId == 2) {
+          for (var k = 0; k < (selectedAnswerOptions[i].length); k++) {
+            var selectedAnswerOptionIndex = selectedAnswerOptions[i][k];
+            var answerOptionId = test.questions[i]
+                ?.answerOptions?[selectedAnswerOptionIndex ?? 0].id;
+            var selectedOptionRequest = SelectedOptionRequest(
+                position: null, answerOptionId: answerOptionId);
+            userAnswerRequest.selectedOptionRequests
+                ?.add(selectedOptionRequest);
+          }
+        }
+        if (question?.questionTypeId == 3 || question?.questionTypeId == 4) {
+          for (var k = 0; k < (selectedAnswerOptions[i].length); k++) {
+            var selectedOptionRequest = SelectedOptionRequest(
+                position: k, answerOptionId: selectedAnswerOptions[i][k]);
+            userAnswerRequest.selectedOptionRequests
+                ?.add(selectedOptionRequest);
+          }
+        }
+        passedTestRequest.userAnswerRequests?.add(userAnswerRequest);
+      }
+      debugPrint('${passedTestRequest.toJson()}');
+
+      emit(TestLoading(test, selectedQuestion, selectedAnswerOptions, coparsionAnswerOptions));
+      final response = await mainService.postPassedTest(passedTestRequest);
+      response.fold((l) {
+        emit(TestError(test, selectedQuestion, selectedAnswerOptions, coparsionAnswerOptions, l.message));
+      }, (value) {
+        if (value != null) {
+          debugPrint('Success');
+          debugPrint('${value.toJson()}');
+          emit(TestCompleted(test, selectedQuestion, selectedAnswerOptions, coparsionAnswerOptions, value.result ?? 0));
+        }
+      });
+
     });
   }
 }

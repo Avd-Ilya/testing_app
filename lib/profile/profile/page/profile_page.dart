@@ -10,10 +10,11 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProfileBloc(ProfileServiceImpl()),
-      child: const ProfileWidget(),
-    );
+    // return BlocProvider(
+    //   create: (context) => ProfileBloc(ProfileServiceImpl()),
+    //   child: const ProfileWidget(),
+    // );
+    return const ProfileWidget();
   }
 }
 

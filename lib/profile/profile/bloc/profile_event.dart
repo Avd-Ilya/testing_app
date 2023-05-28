@@ -8,8 +8,12 @@ abstract class ProfileEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class ProfileNeedData extends ProfileEvent {}
+class ProfileOnAppear extends ProfileEvent {}
+
+class ProfileTabSelected extends ProfileEvent {}
 
 class ProfileShouldShowTrackedTests extends ProfileEvent {}
 
 class ProfileReterned extends ProfileEvent {}
+
+class ProfileDeleteAccountButtonTapped extends ProfileEvent {}

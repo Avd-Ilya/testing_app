@@ -7,12 +7,13 @@ import 'package:testing_app/main/test/widgets/test_widget.dart';
 
 class TestPage extends StatelessWidget {
   TestDto test;
-  TestPage({super.key, required this.test});
+  int? trackedTestId;
+  TestPage({super.key, required this.test, this.trackedTestId});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => TestBloc(MainServiceImpl(), test),
+      create: (context) => TestBloc(MainServiceImpl(), test, trackedTestId),
       child: const TestWidget(),
     );
   }

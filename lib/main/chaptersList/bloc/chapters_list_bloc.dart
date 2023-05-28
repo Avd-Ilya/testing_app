@@ -9,12 +9,13 @@ part 'chapters_list_state.dart';
 
 class ChaptersListBloc extends Bloc<ChaptersListEvent, ChaptersListState> {
   final MainService mainService;
+  final int subjectId;
   List<ChapterDto> chapters = [];
 
-  ChaptersListBloc(this.mainService) : super(ChaptersListInitial()) {
+  ChaptersListBloc(this.mainService, this.subjectId) : super(ChaptersListInitial()) {
     on<ChaptersListNeedData>((event, emit) async {
       emit(ChaptersListLoading());
-      final response = await mainService.getChapters();
+      final response = await mainService.getChapters(subjectId);
 
       response.fold(
         (exception) {

@@ -35,3 +35,19 @@ class TestsListShowTest extends TestsListState {
   @override
   List<Object?> get props => [test];
 }
+
+class TestsListCreatingTrackedTest extends TestsListState {
+  final int index;
+  const TestsListCreatingTrackedTest(this.index);
+
+  @override
+  List<Object?> get props => [index];
+}
+
+class TestsListTrackedTestCreated extends TestsListState {
+  final String key;
+  const TestsListTrackedTestCreated(this.key);
+
+  @override
+  List<Object?> get props => [key];
+}

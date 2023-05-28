@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:core/config.dart';
-import 'package:flutter/material.dart';
 import 'package:core/web_client.dart';
 import 'package:fpdart/src/either.dart';
 import 'package:testing_app/auth/service/auth_service.dart';
@@ -16,12 +14,8 @@ class AuthServiceImpl implements AuthService {
 
     try {
       var response = await webClient.post('/login', body: body);
-      // debugPrint('response - ${response}');
-      // debugPrint('response str - ${json.decode(response)}');
       return Right(response);
     } catch (e) {
-      debugPrint('3');
-      debugPrint('error - $e');
       return left(FormatException(e.toString()));
     }
   }
@@ -36,8 +30,6 @@ class AuthServiceImpl implements AuthService {
       var response = await webClient.post('/register', body: body);
       return Right(response);
     } catch (e) {
-      debugPrint('3');
-      debugPrint('error - $e');
       return left(FormatException(e.toString()));
     }
   }

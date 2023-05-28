@@ -9,12 +9,20 @@ abstract class SignUpEvent extends Equatable {
 }
 
 class SignUpButtonPressed extends SignUpEvent {
-  final String fio;
-  final String email;
-  final String password;
-  final String repeatedPassword;
-  const SignUpButtonPressed({required this.fio,required this.email, required this.password, required this.repeatedPassword});
+  final Map<String, String> textFields;
+  const SignUpButtonPressed({required this.textFields});
 
   @override
-  List<Object?> get props => [fio, email, password, repeatedPassword];
+  List<Object?> get props => [textFields.values.hashCode];
+}
+
+class SignUpTextChanged extends SignUpEvent {
+  final String key;
+  final String value;
+  final String repeatedValue;
+  const SignUpTextChanged(
+      {required this.key, required this.value, this.repeatedValue = ''});
+
+  @override
+  List<Object> get props => [key, value, repeatedValue];
 }

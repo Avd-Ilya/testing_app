@@ -16,6 +16,9 @@ dependencies:
   equatable: ^2.0.5
   fpdart: ^0.4.0
   dotted_border: ^2.0.0
+  bmprogresshud: ^1.0.1
+  intl: ^0.18.1
+  bloc_test: ^9.1.1
 
 dev_dependencies:
   flutter_test:

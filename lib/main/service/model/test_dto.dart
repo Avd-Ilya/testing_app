@@ -4,6 +4,7 @@ import 'package:testing_app/main/service/model/chapter_dto.dart';
 import 'package:testing_app/main/service/model/question_dto.dart';
 
 List<TestDto> testsDtoFromJson(String str) => List<TestDto>.from(json.decode(str).map((x) => TestDto.fromJson(x)));
+TestDto testDtoFromJson(String str) => TestDto.fromJson(json.decode(str));
 
 String testDtoToJson(List<TestDto> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 

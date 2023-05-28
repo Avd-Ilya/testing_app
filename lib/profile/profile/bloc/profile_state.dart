@@ -14,6 +14,11 @@ class ProfileInitial extends ProfileState {
   const ProfileInitial(super.fio, super.email);
 }
 
+class ProfilePopToRoot extends ProfileState {
+  const ProfilePopToRoot(super.fio, super.email);
+}
+
+
 class ProfileLoading extends ProfileState {
   const ProfileLoading(super.fio, super.email);
 }

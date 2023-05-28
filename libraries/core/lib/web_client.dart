@@ -57,20 +57,19 @@ class WebClient {
   }
 
   dynamic _handleResponse(http.Response response) async {
-    // final responseBody = json.decode(response.body);
     debugPrint('');
     debugPrint('----------------');
     debugPrint(response.request.toString());
     debugPrint('${await defaultHeaders()}');
-    debugPrint(response.reasonPhrase.toString() + ' ${response.statusCode}');
+    debugPrint('${response.reasonPhrase} ${response.statusCode}');
     debugPrint(response.body.toString());
     debugPrint('----------------');
     debugPrint('');
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return response.body;
     } else {
-      // throw Exception(responseBody['message']);
-      throw Exception('Error');
+      throw Exception('${response.reasonPhrase} ${response.statusCode}');
+      // throw Exception('Error');
     }
   }
 }

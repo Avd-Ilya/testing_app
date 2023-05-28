@@ -8,7 +8,9 @@ abstract class ClassesListEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class ClassesListNeedData extends ClassesListEvent {}
+class ClassesListOnAppear extends ClassesListEvent {}
+
+class ClassesListTabSelected extends ClassesListEvent {}
 
 class ClassesListSelected extends ClassesListEvent {
   final int index;
@@ -16,4 +18,16 @@ class ClassesListSelected extends ClassesListEvent {
 
   @override
   List<Object?> get props => [index];
+}
+
+class ClassesListShouldTakeTrackedTest extends ClassesListEvent {}
+
+class ClassesListAddingTrackedTestCancelled extends ClassesListEvent {}
+
+class ClassesListFilledTrackedTest extends ClassesListEvent {
+  final String key;
+  const ClassesListFilledTrackedTest(this.key);
+
+  @override
+  List<Object?> get props => [key];
 }

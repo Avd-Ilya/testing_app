@@ -9,9 +9,10 @@ class ClassesListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ClassesListBloc(MainServiceImpl()),
-      child: const ClassesListWidget(),
-    );
+    return const ClassesListWidget();
+    // return BlocProvider(
+    //   create: (context) => ClassesListBloc(MainServiceImpl()),
+    //   child: const ClassesListWidget(),
+    // );
   }
 }

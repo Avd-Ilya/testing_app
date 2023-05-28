@@ -12,18 +12,21 @@ class PassedTestRequestDto {
         this.date,
         this.result,
         this.testId,
+        this.trackedTestId,
         this.userAnswerRequests,
     });
 
     DateTime? date;
     int? result;
     int? testId;
+    int? trackedTestId;
     List<UserAnswerRequest>? userAnswerRequests;
 
     factory PassedTestRequestDto.fromJson(Map<String, dynamic> json) => PassedTestRequestDto(
         date: json["date"] == null ? null : DateTime.parse(json["date"]),
         result: json["result"],
         testId: json["testId"],
+        trackedTestId: json["trackedTestId"],
         userAnswerRequests: json["userAnswerRequests"] == null ? [] : List<UserAnswerRequest>.from(json["userAnswerRequests"]!.map((x) => UserAnswerRequest.fromJson(x))),
     );
 
@@ -31,6 +34,7 @@ class PassedTestRequestDto {
         "date": date?.toIso8601String(),
         "result": result,
         "testId": testId,
+        "trackedTestId": trackedTestId,
         "userAnswerRequests": userAnswerRequests == null ? [] : List<dynamic>.from(userAnswerRequests!.map((x) => x.toJson())),
     };
 }

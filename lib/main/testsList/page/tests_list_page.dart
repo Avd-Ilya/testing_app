@@ -5,12 +5,13 @@ import 'package:testing_app/main/testsList/bloc/tests_list_bloc.dart';
 import 'package:testing_app/main/testsList/widgets/tests_list_widget.dart';
 
 class TestsListPage extends StatelessWidget {
-  const TestsListPage({super.key});
+  final int chapterId;
+  const TestsListPage({super.key, required this.chapterId});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => TestsListBloc(MainServiceImpl()),
+      create: (context) => TestsListBloc(MainServiceImpl(), chapterId),
       child: const TestsListWidget(),
     );
   }

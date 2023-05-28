@@ -1,4 +1,5 @@
 import 'package:core/alert_dialog.dart';
+import 'package:core/basic_text_field_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testing_app/navigation/navigation_cubit.dart';
@@ -53,50 +54,100 @@ class _SignUpWidgetState extends State<SignUpWidget> {
           ),
           body: SafeArea(
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 18),
-                  TextFormField(
-                    controller: _fioController,
-                    decoration: const InputDecoration(labelText: 'ФИО'),
-                  ),
-                  const SizedBox(height: 18),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(labelText: 'E-mail'),
-                  ),
-                  const SizedBox(height: 18),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(labelText: 'Пароль'),
-                  ),
-                  const SizedBox(height: 18),
-                  TextFormField(
-                    controller: _repeatPasswordController,
-                    decoration:
-                        const InputDecoration(labelText: 'Повторите пароль'),
-                  ),
-                  Expanded(child: Container()),
-                  SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context.read<SignUpBloc>().add(SignUpButtonPressed(
-                              fio: _fioController.text,
-                              email: _emailController.text,
-                              password: _passwordController.text,
-                              repeatedPassword: _repeatPasswordController.text,
-                            ));
-                      },
-                      child: const Text('Зарегистрироваться'),
+              // color: Colors.white,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 40, left: 24, right: 24),
+                      child: BasicTextFieldWidget(
+                        onChanged: (value) {
+                          context
+                              .read<SignUpBloc>()
+                              .add(SignUpTextChanged(key: 'fio', value: value));
+                        },
+                        controller: _fioController,
+                        error: state.textFields['fio'],
+                        label: 'ФИО',
+                        hintText: 'ФИО',
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 150,
-                  )
-                ],
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 24, left: 24, right: 24),
+                      child: BasicTextFieldWidget(
+                        onChanged: (value) {
+                          context.read<SignUpBloc>().add(
+                              SignUpTextChanged(key: 'email', value: value));
+                        },
+                        controller: _emailController,
+                        error: state.textFields['email'],
+                        label: 'Электронная почта',
+                        hintText: 'Электронная почта',
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 24, left: 24, right: 24),
+                      child: BasicTextFieldWidget(
+                        onChanged: (value) {
+                          context.read<SignUpBloc>().add(SignUpTextChanged(
+                                key: 'password',
+                                value: value,
+                                repeatedValue: _repeatPasswordController.text,
+                              ));
+                        },
+                        controller: _passwordController,
+                        error: state.textFields['password'],
+                        label: 'Пароль',
+                        hintText: 'Пароль',
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 24, left: 24, right: 24),
+                      child: BasicTextFieldWidget(
+                        onChanged: (value) {
+                          context.read<SignUpBloc>().add(
+                                SignUpTextChanged(
+                                  key: 'repeatedPassword',
+                                  value: value,
+                                  repeatedValue: _passwordController.text,
+                                ),
+                              );
+                        },
+                        controller: _repeatPasswordController,
+                        error: state.textFields['repeatedPassword'],
+                        label: 'Повторите пароль',
+                        hintText: 'Повторите пароль',
+                      ),
+                    ),
+                    const SizedBox(height: 100),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 24, bottom: 50, left: 24, right: 24),
+                      child: SizedBox(
+                        height: 60,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            context
+                                .read<SignUpBloc>()
+                                .add(SignUpButtonPressed(textFields: {
+                                  'fio': _fioController.text,
+                                  'email': _emailController.text,
+                                  'password': _passwordController.text,
+                                  'repeatedPassword':
+                                      _repeatPasswordController.text,
+                                }));
+                          },
+                          child: const Text('ЗАРЕГИСТРИРОВАТЬСЯ'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

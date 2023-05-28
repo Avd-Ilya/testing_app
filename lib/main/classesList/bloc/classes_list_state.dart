@@ -5,11 +5,12 @@ abstract class ClassesListState extends Equatable {
   const ClassesListState();
 
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }
 
 class ClassesListInitial extends ClassesListState {}
+
+class ClassesListPopToRoot extends ClassesListState {}
 
 class ClassesListLoading extends ClassesListState {}
 
@@ -35,4 +36,15 @@ class ClassesListShowSubjects extends ClassesListState {
 
   @override
   List<Object?> get props => [schoolClass];
+}
+
+class ClassesListShowAddTrackedTest extends ClassesListState {}
+
+class ClassesListShowTrackedTest extends ClassesListState {
+  final TestDto test;
+  final int? trackedTestId;
+  const ClassesListShowTrackedTest(this.test, this.trackedTestId);
+
+  @override
+  List<Object?> get props => [test, trackedTestId];
 }

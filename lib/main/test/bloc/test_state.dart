@@ -20,3 +20,26 @@ class TestUpdated extends TestState {
   TestUpdated(super.test, super.selectedQuestion, super.selectedAnswerOptions, super.coparsionAnswerOptions);
 }
 
+class TestShouldFinish extends TestState {
+  TestShouldFinish(super.test, super.selectedQuestion, super.selectedAnswerOptions, super.coparsionAnswerOptions);
+}
+
+class TestError extends TestState {
+  final String message;
+  TestError(super.test, super.selectedQuestion, super.selectedAnswerOptions, super.coparsionAnswerOptions, this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class TestLoading extends TestState {
+  TestLoading(super.test, super.selectedQuestion, super.selectedAnswerOptions, super.coparsionAnswerOptions);
+}
+
+class TestCompleted extends TestState {
+  double result;
+  TestCompleted(super.test, super.selectedQuestion, super.selectedAnswerOptions, super.coparsionAnswerOptions, this.result);
+
+  @override
+  List<Object?> get props => [result];
+}

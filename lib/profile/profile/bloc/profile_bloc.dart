@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
+import 'package:core/shared.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:testing_app/profile/service/profile_service.dart';
@@ -13,9 +16,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   String email = '';
 
   ProfileBloc(this.profileService) : super(const ProfileInitial('', '')) {
-    on<ProfileNeedData>((event, emit) async {
+    on<ProfileOnAppear>((event, emit) async {
+      emit(ProfileLoading(fio, email));
       final response = await profileService.profile();
-
       response.fold((exception) {
         emit(ProfileError(fio, email, exception.message));
       }, (value) {
@@ -28,13 +31,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
       });
     });
-
+    on<ProfileTabSelected>((event, emit) {
+      emit(ProfilePopToRoot(fio, email));
+    });
     on<ProfileShouldShowTrackedTests>((event, emit) {
       emit(ProfileShowTrackedTests(fio, email));
     });
 
     on<ProfileReterned>((event, emit) {
       emit(ProfileInitial(fio, email));
+    });
+    on<ProfileDeleteAccountButtonTapped>((event, emit) {
+      
     });
   }
 }
