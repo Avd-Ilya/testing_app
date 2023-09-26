@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testing_app/profile/activity_tracked_tests/bloc/activity_tracked_tests_bloc.dart';
 import 'package:bmprogresshud/bmprogresshud.dart';
+import 'package:testing_app/results/results/page/results_page.dart';
 
 class ActivityTrackedTestsWidget extends StatefulWidget {
   const ActivityTrackedTestsWidget({super.key});
@@ -64,9 +65,25 @@ class _ActivityTrackedTestsWidgetState
               if (state is ActivityTrackedTestsCopyKey) {
                 copyKey(state.key);
                 Future.delayed(Duration.zero, () {
-                  ProgressHud.of(context)
-                      ?.showSuccessAndDismiss(text: 'Ссылка на тест скопирована!');
+                  ProgressHud.of(context)?.showSuccessAndDismiss(
+                      text: 'Ссылка на тест скопирована!');
                 });
+              }
+              if (state is ActivityTrackedTestsShowResults) {
+                Future.delayed(
+                  Duration.zero,
+                  () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) {
+                        return ResultsPage(passedTest: state.passedTest);
+                      },
+                    )).then((value) {
+                      context
+                          .read<ActivityTrackedTestsBloc>()
+                          .add(ActivityTrackedTestsOnAppear());
+                    });
+                  },
+                );
               }
               return Builder(
                 builder: (context) {
@@ -100,28 +117,16 @@ class _ActivityTrackedTestsWidgetState
                     return ListView.builder(
                       padding: const EdgeInsets.all(10),
                       itemCount: state.activityTrackedTests.length,
-                      // separatorBuilder: (context, index) {
-                      //   return const Divider(
-                      //     // color: Colors.black,
-                      //     endIndent: 15,
-                      //     indent: 20,
-                      //     thickness: 1,
-                      //     height: 5,
-                      //   );
-                      // },
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () {
-                            // context
-                            //     .read<ResultsListBloc>()
-                            //     .add(ResultsListSelected(index));
+                            context.read<ActivityTrackedTestsBloc>().add(ActivityTrackedTestsSelected(index));
                           },
                           child: Container(
                             color: Colors.white,
                             padding: const EdgeInsets.all(10),
                             child: DecoratedBox(
                               decoration: const BoxDecoration(
-                                // color: Colors.grey[350],
                                 color: Colors.white,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10)),
@@ -183,7 +188,8 @@ class _ActivityTrackedTestsWidgetState
                                                       dateToString(state
                                                               .activityTrackedTests[
                                                                   index]
-                                                              .date ??
+                                                              .passedTest
+                                                              ?.date ??
                                                           DateTime(0)),
                                                       style: const TextStyle(
                                                           color: Colors.white)),
@@ -213,14 +219,15 @@ class _ActivityTrackedTestsWidgetState
                                                 ),
                                               ),
                                               Text(
-                                                '${state.activityTrackedTests[index].result}%',
+                                                '${state.activityTrackedTests[index].passedTest?.result}%',
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold,
                                                   color: colorForResult(state
                                                           .activityTrackedTests[
                                                               index]
-                                                          .result ??
+                                                          .passedTest
+                                                          ?.result ??
                                                       0),
                                                 ),
                                               ),
@@ -229,6 +236,7 @@ class _ActivityTrackedTestsWidgetState
                                         ],
                                       ),
                                     ),
+                                    const Icon(Icons.chevron_right),
                                   ],
                                 ),
                               ),

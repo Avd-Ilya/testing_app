@@ -18,7 +18,7 @@ class TestsListBloc extends Bloc<TestsListEvent, TestsListState> {
 
   TestsListBloc(this.mainService, this.chapterId) : super(TestsListInitial()) {
     on<TestsListNeedData>((event, emit) async {
-      emit(TestsListLoaded(tests));
+      emit(TestsListLoading());
       final response = await mainService.getTests(chapterId);
 
       response.fold(

@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:core/web_client.dart';
 import 'package:fpdart/src/either.dart';
 import 'package:testing_app/auth/service/auth_service.dart';
-import 'package:http/http.dart' as http;
 
 class AuthServiceImpl implements AuthService {
   @override

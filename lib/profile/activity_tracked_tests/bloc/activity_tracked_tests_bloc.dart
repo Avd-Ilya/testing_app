@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
+import 'package:testing_app/main/service/model/passed_test_dto.dart';
 import 'package:testing_app/profile/service/model/activity_tracked_test_dto.dart';
 import 'package:testing_app/profile/service/profile_service.dart';
 
@@ -15,7 +16,7 @@ class ActivityTrackedTestsBloc
   List<ActivityTrackedTestDto> activityTrackedTests = [];
 
   ActivityTrackedTestsBloc({required this.profileService, required this.trackedTestId, required this.tarckedTestKey})
-      : super(ActivityTrackedTestsInitial(const [])) {
+      : super(const ActivityTrackedTestsInitial([])) {
     on<ActivityTrackedTestsOnAppear>((event, emit) async {
       emit(ActivityTrackedTestsLoading(activityTrackedTests));
       var response = await profileService.getActivityTrackedTest(trackedTestId);
@@ -31,6 +32,9 @@ class ActivityTrackedTestsBloc
     });
     on<ActivityTrackedTestsCopyButtonTapped>((event, emit) {
       emit(ActivityTrackedTestsCopyKey(activityTrackedTests, tarckedTestKey));
+    });
+    on<ActivityTrackedTestsSelected>((event, emit) {
+      emit(ActivityTrackedTestsShowResults(activityTrackedTests, activityTrackedTests[event.index].passedTest ?? PassedTestDto()));
     });
   }
 }

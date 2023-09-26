@@ -72,6 +72,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         error: state.textFields['fio'],
                         label: 'ФИО',
                         hintText: 'ФИО',
+                        inputFormatters: [],
                       ),
                     ),
                     Padding(

@@ -111,28 +111,81 @@ class ResultsListWidget extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
+                                  
                                   children: [
                                     Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                state
-                                                        .passedTests[index]
-                                                        .test
-                                                        ?.chapter
-                                                        ?.subject
-                                                        ?.name ??
-                                                    '',
-                                                style: const TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
+                                          Flexible(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  state
+                                                          .passedTests[index]
+                                                          .test
+                                                          ?.chapter
+                                                          ?.subject
+                                                          ?.name ??
+                                                      '',
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
-                                              ),
-                                              const Expanded(child: SizedBox()),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        state.passedTests[index].test
+                                                                ?.chapter?.name ??
+                                                            '',
+                                                        style: const TextStyle(
+                                                          fontSize: 17,
+                                                          fontWeight: FontWeight.w600,
+                                                        ),
+                                                        // maxLines: 3,
+                                                        // overflow:
+                                                        //     TextOverflow.ellipsis,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        state.passedTests[index].test
+                                                                ?.topic ??
+                                                            '',
+                                                        textAlign: TextAlign.left,
+                                                        style: const TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
                                               DecoratedBox(
                                                 decoration: BoxDecoration(
                                                   color: Colors.red.shade400,
@@ -153,48 +206,35 @@ class ResultsListWidget extends StatelessWidget {
                                                   ),
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                state.passedTests[index].test
-                                                        ?.chapter?.name ??
-                                                    '',
-                                                style: const TextStyle(
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
+                                              const SizedBox(
+                                                height: 5,
                                               ),
-                                              const Expanded(child: SizedBox()),
-                                              Text(
-                                                '${state.passedTests[index].result}%',
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: colorForResult(state
+                                              Builder(
+                                                builder: (context) {
+                                                  var res = state
                                                           .passedTests[index]
                                                           .result ??
-                                                      0),
-                                                ),
+                                                      0;
+                                                  return Text(
+                                                    '${double.parse(res.toStringAsFixed(2))}%',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: colorForResult(
+                                                          state
+                                                                  .passedTests[
+                                                                      index]
+                                                                  .result ??
+                                                              0),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                              const SizedBox(
+                                                height: 5,
                                               ),
                                             ],
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            state.passedTests[index].test
-                                                    ?.topic ??
-                                                '',
-                                            textAlign: TextAlign.left,
-                                            style: const TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                            ),
                                           ),
                                         ],
                                       ),

@@ -10,13 +10,15 @@ class BasicTextFieldWidget extends StatefulWidget {
       required this.onChanged,
       required this.label,
       required this.hintText,
-      this.errorHintText});
+      this.errorHintText, 
+      this.inputFormatters});
   final TextEditingController? controller;
   final String? error;
   final ValueChanged<String> onChanged;
   final String label;
   final String hintText;
   final String? errorHintText;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<BasicTextFieldWidget> createState() => _BasicTextFieldWidgetState();
@@ -96,8 +98,7 @@ class _BasicTextFieldWidgetState extends State<BasicTextFieldWidget> {
                         FocusScope.of(context).unfocus();
                       },
                       focusNode: myFocusNode,
-                      // inputFormatters: [maskFormatter],
-                      inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
+                      inputFormatters: widget.inputFormatters ?? [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.all(0),
                         isDense: true,

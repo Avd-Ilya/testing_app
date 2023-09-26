@@ -2,28 +2,28 @@ part of 'activity_tracked_tests_bloc.dart';
 
 @immutable
 abstract class ActivityTrackedTestsState extends Equatable {
-  List<ActivityTrackedTestDto> activityTrackedTests = [];
-  ActivityTrackedTestsState(this.activityTrackedTests);
+  final List<ActivityTrackedTestDto> activityTrackedTests;
+  const ActivityTrackedTestsState(this.activityTrackedTests);
 
   @override
   List<Object?> get props => [];
 }
 
 class ActivityTrackedTestsInitial extends ActivityTrackedTestsState {
-  ActivityTrackedTestsInitial(super.activityTrackedTests);
+  const ActivityTrackedTestsInitial(super.activityTrackedTests);
 }
 
 class ActivityTrackedTestsLoading extends ActivityTrackedTestsState {
-  ActivityTrackedTestsLoading(super.activityTrackedTests);
+  const ActivityTrackedTestsLoading(super.activityTrackedTests);
 }
 
 class ActivityTrackedTestsLoaded extends ActivityTrackedTestsState {
-  ActivityTrackedTestsLoaded(super.activityTrackedTests);
+  const ActivityTrackedTestsLoaded(super.activityTrackedTests);
 }
 
 class ActivityTrackedTestsError extends ActivityTrackedTestsState {
   final String message;
-  ActivityTrackedTestsError(super.activityTrackedTests, this.message);
+  const ActivityTrackedTestsError(super.activityTrackedTests, this.message);
 
   @override
   List<Object?> get props => [message];
@@ -31,8 +31,15 @@ class ActivityTrackedTestsError extends ActivityTrackedTestsState {
 
 class ActivityTrackedTestsCopyKey extends ActivityTrackedTestsState {
   final String key;
-  ActivityTrackedTestsCopyKey(super.activityTrackedTests, this.key);
+  const ActivityTrackedTestsCopyKey(super.activityTrackedTests, this.key);
 
   @override
   List<Object?> get props => [key];
+}
+class ActivityTrackedTestsShowResults extends ActivityTrackedTestsState {
+  final PassedTestDto passedTest;
+  const ActivityTrackedTestsShowResults(super.activityTrackedTests, this.passedTest);
+
+  @override
+  List<Object?> get props => [passedTest];
 }

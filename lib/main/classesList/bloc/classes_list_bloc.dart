@@ -16,6 +16,7 @@ class ClassesListBloc extends Bloc<ClassesListEvent, ClassesListState> {
     List<ClassDto> classes = [];
 
     on<ClassesListOnAppear>((event, emit) async {
+      emit(ClassesListLoading());
       final response = await mainService.getClasses();
 
       response.fold(

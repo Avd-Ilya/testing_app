@@ -117,7 +117,7 @@ class _ClassesListWidgetState extends State<ClassesListWidget> {
           color: Colors.white,
           child: BlocBuilder<ClassesListBloc, ClassesListState>(
             builder: (context, state) {
-              debugPrint('${state.toString()}');
+              debugPrint(state.toString());
               if (state is ClassesListInitial) {
                 context.read<ClassesListBloc>().add(ClassesListOnAppear());
               }
@@ -181,7 +181,6 @@ class _ClassesListWidgetState extends State<ClassesListWidget> {
               return Builder(
                 builder: (context) {
                   if (classes.isEmpty && state is ClassesListLoaded) {
-                    debugPrint('123');
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -232,10 +231,12 @@ class _ClassesListWidgetState extends State<ClassesListWidget> {
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: Text(classes[index].name ?? '',
-                                      style: const TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.w500)),
+                                  child: Text(
+                                    classes[index].name ?? '',
+                                    style: const TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.w500),
+                                  ),
                                 ),
                                 const Icon(Icons.chevron_right)
                               ],

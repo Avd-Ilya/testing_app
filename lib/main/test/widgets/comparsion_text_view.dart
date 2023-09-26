@@ -23,6 +23,7 @@ class ComparsionTextView extends StatelessWidget {
               child: Text(
                 text,
                 style: const TextStyle(fontSize: 25),
+                textAlign: TextAlign.center,
               ),
             ),
           ),

@@ -11,3 +11,11 @@ abstract class ActivityTrackedTestsEvent extends Equatable {
 class ActivityTrackedTestsOnAppear extends ActivityTrackedTestsEvent {}
 
 class ActivityTrackedTestsCopyButtonTapped extends ActivityTrackedTestsEvent {}
+
+class ActivityTrackedTestsSelected extends ActivityTrackedTestsEvent {
+  final int index;
+  const ActivityTrackedTestsSelected(this.index);
+
+  @override
+  List<Object?> get props => [index];
+}

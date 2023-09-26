@@ -379,6 +379,7 @@ class _TestWidgetState extends State<TestWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Тестирование'),
         actions: [
@@ -396,6 +397,7 @@ class _TestWidgetState extends State<TestWidget> {
           builder: (context, state) {
             if (state is TestInitial) {
               context.read<TestBloc>().add(TestOnAppear());
+              context.read<TestBloc>().add(const TestSelectedQuestion(0));
             }
             if (state is TestUpdated) {
               selectedQuestion = state.selectedQuestion;
