@@ -237,11 +237,11 @@ class _TestsListWidgetState extends State<TestsListWidget> {
                                   shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(15.0))),
-                                  itemBuilder: (context) => const [
+                                  itemBuilder: (context) => [
                                     PopupMenuItem(
                                       value: 1,
                                       child: Row(
-                                        children: [
+                                        children: const [
                                           Expanded(
                                             child: Text(
                                               'Создать ссылку на тест',

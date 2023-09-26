@@ -102,19 +102,19 @@ class ProfileWidget extends StatelessWidget {
                     ),
                     ProfileInfoWidget(fio: state.fio, email: state.email),
                     Expanded(child: Container()),
-                    // TextButton(
-                    //     onPressed: () {
-                    //       context.read<ProfileBloc>().add(ProfileDeleteAccountButtonTapped());
-                    //       debugPrint('Delete account button tapped');
-                    //     },
-                    //     child: Text(
-                    //       'Удалить аккаунт',
-                    //       style: TextStyle(
-                    //         color: Colors.red[300],
-                    //         fontSize: 15,
-                    //         decoration: TextDecoration.underline,
-                    //       ),
-                    //     ))
+                    TextButton(
+                        onPressed: () {
+                          context.read<ProfileBloc>().add(ProfileDeleteAccountButtonTapped());
+                          debugPrint('Delete account button tapped');
+                        },
+                        child: Text(
+                          'Удалить аккаунт',
+                          style: TextStyle(
+                            color: Colors.red[300],
+                            fontSize: 15,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ))
                   ],
                 ),
               );

@@ -9,15 +9,13 @@ class SelectionRow extends StatelessWidget {
       {super.key,
       required this.text,
       required this.isSelected,
-      required this.isSingleSelection,
+      required this.isSingleSelection, 
       this.color = Colors.white});
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        minHeight: 70,
-      ),
+    return SizedBox(
+      height: 70,
       child: DecoratedBox(
         decoration: BoxDecoration(
           border: Border.all(),
@@ -47,11 +45,9 @@ class SelectionRow extends StatelessWidget {
                 }
               },
             ),
-            Expanded(
-              child: Text(
-                text,
-                style: const TextStyle(fontSize: 25),
-              ),
+            Text(
+              text,
+              style: const TextStyle(fontSize: 25),
             )
           ],
         ),

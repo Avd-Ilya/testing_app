@@ -12,7 +12,7 @@ class ResultsListBloc extends Bloc<ResultsListEvent, ResultsListState> {
   final ResultsService resultsService;
   List<PassedTestDto> passedTests = [];
 
-  ResultsListBloc(this.resultsService) : super(const ResultsListInitial([])) {
+  ResultsListBloc(this.resultsService) : super(ResultsListInitial(const [])) {
     on<ResultsListOnAppear>((event, emit) async {
       emit(ResultsListLoading(passedTests));
       var response = await resultsService.getPassedTests();

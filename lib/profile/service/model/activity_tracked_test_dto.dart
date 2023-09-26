@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:testing_app/main/service/model/passed_test_dto.dart';
 import 'package:testing_app/profile/service/model/user_profile_dto.dart';
 
 List<ActivityTrackedTestDto> activityTrackedTestsDtoFromJson(String str) => List<ActivityTrackedTestDto>.from(json.decode(str).map((x) => ActivityTrackedTestDto.fromJson(x)));
@@ -10,21 +9,37 @@ String activityTrackedTestDtoToJson(ActivityTrackedTestDto data) => json.encode(
 String activityTrackedTestsDtoToJson(List<ActivityTrackedTestDto> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ActivityTrackedTestDto {
+    String? userId;
     UserProfileDto? user;
-    PassedTestDto? passedTest;
+    DateTime? date;
+    double? result;
+    int? testId;
+    int? trackedTestId;
 
     ActivityTrackedTestDto({
+        this.userId,
         this.user,
-        this.passedTest,
+        this.date,
+        this.result,
+        this.testId,
+        this.trackedTestId,
     });
 
     factory ActivityTrackedTestDto.fromJson(Map<String, dynamic> json) => ActivityTrackedTestDto(
+        userId: json["userId"],
         user: json["user"] == null ? null : UserProfileDto.fromJson(json["user"]),
-        passedTest: json["passedTest"] == null ? null : PassedTestDto.fromJson(json["passedTest"]),
+        date: json["date"] == null ? null : DateTime.parse(json["date"]),
+        result: json["result"]?.toDouble(),
+        testId: json["testId"],
+        trackedTestId: json["trackedTestId"],
     );
 
     Map<String, dynamic> toJson() => {
+        "userId": userId,
         "user": user?.toJson(),
-        "passedTest": passedTest?.toJson(),
+        "date": date?.toIso8601String(),
+        "result": result,
+        "testId": testId,
+        "trackedTestId": trackedTestId,
     };
 }
